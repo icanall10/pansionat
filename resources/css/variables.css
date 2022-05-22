@@ -1,9 +1,1 @@
-body {
-  --color-main: #87A756;
-  --color-main-light: #B6D884;
-  --color-main-dark: #667d44;
-  --color-button: #A8CB75;
-  --color-button-hover: #87A756;
-  --color-pink: #ff00ff;
-}
-
+body{--color-main:#87a756;--color-main-light:#b6d884;--color-main-dark:#667d44;--color-button:#a8cb75;--color-button-hover:#87a756;--color-pink:#f0f}
