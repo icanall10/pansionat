@@ -5,7 +5,9 @@ mix
     .less('resources/less/variables.less', 'resources/css/')
     .less('resources/less/fonts.less', 'resources/css/')
     .less('resources/less/icons.less', 'resources/css/')
-    .less('resources/less/style.less', 'resources/css/');
+    .less('resources/less/style.less', 'resources/css/')
+    .less('resources/less/tablet.less', 'resources/css/')
+    .less('resources/less/mobile.less', 'resources/css/');
 
 mix.styles([
     'resources/css/reset.css',
@@ -17,7 +19,9 @@ mix.styles([
     'resources/vendor/fancybox/fancybox.css',
     'resources/vendor/simplebar/simplebar.css',
     'resources/vendor/daterangepicker/daterangepicker.css',
-    'resources/css/style.css'
+    'resources/css/style.css',
+    'resources/css/tablet.css',
+    'resources/css/mobile.css'
 ], 'public/css/all.css');
 
 mix.scripts([

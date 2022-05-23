@@ -1,4 +1,4 @@
-(function($){
+(function ($) {
 
     var cache = {}, uuid = 0;
 
@@ -20,6 +20,11 @@
 
         return $.isFunction(fn) ? elements.each(fn) : elements;
     };
+
+
+    is_mobile = function () {
+        return $(window).width() <= 960;
+    }
 
 
 })(jQuery);

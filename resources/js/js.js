@@ -19,14 +19,24 @@
         $('.services-block .owl-carousel')
             .once()
             .owlCarousel({
-                items: 5,
                 nav: true,
                 dots: false,
                 margin: 30,
                 navText: [
                     '<div class="i i-arrow-bold"></div>',
                     '<div class="i i-arrow-bold"></div>'
-                ]
+                ],
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    960: {
+                        items: 3,
+                    },
+                    1400: {
+                        items: 5,
+                    }
+                }
             });
 
 
@@ -159,10 +169,20 @@
         $('.schedule-list .owl-carousel')
             .once()
             .owlCarousel({
-                items: 7,
                 dots: false,
                 nav: true,
-                margin: 1
+                margin: 1,
+                responsive: {
+                    0: {
+                        items: 2,
+                    },
+                    960: {
+                        items: 7,
+                    },
+                    1400: {
+                        items: 7,
+                    }
+                }
             });
 
 
@@ -219,23 +239,61 @@
         $('.employees-list.owl-carousel')
             .once()
             .owlCarousel({
-                items: 5,
                 nav: true,
                 dots: false,
                 margin: 30,
                 navText: [
                     '<div class="i i-arrow-bold"></div>',
                     '<div class="i i-arrow-bold"></div>'
-                ]
+                ],
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    960: {
+                        items: 4,
+                    },
+                    1400: {
+                        items: 5,
+                    }
+                }
+            });
+
+
+        $('.menu-link')
+            .once()
+            .click(function (e) {
+                e.preventDefault();
+
+                $(this)
+                    .closest('.header-block')
+                    .toggleClass('menu-open');
+            });
+
+
+        $('.links-block .items')
+            .once(function () {
+                if (!is_mobile()) {
+                    return;
+                }
+
+                $(this)
+                    .addClass('owl-carousel')
+                    .owlCarousel({
+                        items: 1,
+                        nav: false,
+                        dots: true
+                    })
             });
 
 
     }
 
     Date.prototype.addDays = function (dias) {
+        let date = new Date(this.valueOf());
 
-        var date = new Date(this.valueOf());
         date.setDate(parseInt(date.getDate()) + parseInt(dias));
+
         return date;
     };
 
@@ -259,6 +317,17 @@
 
         if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
             $(selectors).removeClass('open');
+        }
+    });
+
+
+    $(document).click(function (event) {
+        let selectors = '.header-block';
+
+        let $target = $(event.target);
+
+        if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
+            $(selectors).removeClass('menu-open');
         }
     });
 
