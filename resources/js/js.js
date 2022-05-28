@@ -6,21 +6,29 @@
             .once()
             .owlCarousel({
                 items: 1,
-                nav: true,
                 dots: true,
                 margin: 30,
                 navText: [
                     '<div class="i i-arrow"></div>',
                     '<div class="i i-arrow"></div>'
-                ]
+                ],
+                responsive: {
+                    0: {
+                        nav: false,
+                    },
+                    960: {
+                        nav: false,
+                    },
+                    1400: {
+                        nav: true,
+                    }
+                }
             });
 
 
         $('.services-block .owl-carousel')
             .once()
             .owlCarousel({
-                nav: true,
-                dots: false,
                 margin: 30,
                 navText: [
                     '<div class="i i-arrow-bold"></div>',
@@ -29,12 +37,28 @@
                 responsive: {
                     0: {
                         items: 1,
+                        dots: true,
+                        nav: false,
                     },
-                    960: {
+                    500: {
+                        items: 2,
+                        dots: true,
+                        nav: false,
+                    },
+                    768: {
                         items: 3,
+                        dots: true,
+                        nav: false,
                     },
-                    1400: {
+                    1280: {
+                        items: 4,
+                        dots: false,
+                        nav: true,
+                    },
+                    1366: {
                         items: 5,
+                        dots: false,
+                        nav: true,
                     }
                 }
             });
@@ -167,22 +191,37 @@
 
 
         $('.schedule-list .owl-carousel')
-            .once()
-            .owlCarousel({
-                dots: false,
-                nav: true,
-                margin: 1,
-                responsive: {
-                    0: {
-                        items: 2,
-                    },
-                    960: {
-                        items: 7,
-                    },
-                    1400: {
-                        items: 7,
+            .once(function () {
+                let $this = $(this);
+                let date = formatDate(new Date());
+                let index = $this.find('.item[data-date="' + date + '"]').index() || 0;
+
+                $this.owlCarousel({
+                    dots: false,
+                    nav: true,
+                    margin: 1,
+                    responsive: {
+                        0: {
+                            items: 2,
+                            startPosition: index
+                        },
+                        500: {
+                            items: 3,
+                            startPosition: index
+                        },
+                        700: {
+                            items: 4,
+                            startPosition: index
+                        },
+                        900: {
+                            items: 5,
+                            startPosition: index
+                        },
+                        1200: {
+                            items: 7,
+                        }
                     }
-                }
+                });
             });
 
 
@@ -231,16 +270,26 @@
             .once()
             .owlCarousel({
                 items: 1,
-                dots: false,
-                nav: true
+                responsive: {
+                    0: {
+                        nav: false,
+                        dots: true,
+                    },
+                    960: {
+                        nav: false,
+                        dots: true,
+                    },
+                    1400: {
+                        nav: true,
+                        dots: false,
+                    }
+                }
             });
 
 
         $('.employees-list.owl-carousel')
             .once()
             .owlCarousel({
-                nav: true,
-                dots: false,
                 margin: 30,
                 navText: [
                     '<div class="i i-arrow-bold"></div>',
@@ -249,14 +298,65 @@
                 responsive: {
                     0: {
                         items: 1,
+                        nav: false,
+                        dots: true,
                     },
-                    960: {
+                    481: {
+                        items: 2,
+                        nav: false,
+                        dots: true,
+
+                    },
+                    768: {
+                        items: 3,
+                        nav: false,
+                        dots: true,
+                    },
+                    1000: {
                         items: 4,
-                    },
-                    1400: {
-                        items: 5,
+                        nav: true,
+                        dots: false,
                     }
                 }
+            });
+
+
+        $('.employees-list:not(.owl-carousel)')
+            .once('mobile-owl-carousel', function () {
+                if (!is_mobile()) return;
+
+                $(this)
+                    .addClass('owl-carousel')
+                    .owlCarousel({
+                        margin: 30,
+                        navText: [
+                            '<div class="i i-arrow-bold"></div>',
+                            '<div class="i i-arrow-bold"></div>'
+                        ],
+                        responsive: {
+                            0: {
+                                items: 1,
+                                nav: false,
+                                dots: true,
+                            },
+                            481: {
+                                items: 2,
+                                nav: false,
+                                dots: true,
+
+                            },
+                            768: {
+                                items: 3,
+                                nav: false,
+                                dots: true,
+                            },
+                            1000: {
+                                items: 4,
+                                nav: true,
+                                dots: false,
+                            }
+                        }
+                    });
             });
 
 
@@ -280,12 +380,106 @@
                 $(this)
                     .addClass('owl-carousel')
                     .owlCarousel({
-                        items: 1,
                         nav: false,
-                        dots: true
+                        dots: true,
+                        margin: 20,
+                        responsive: {
+                            0: {
+                                items: 2,
+                            },
+                            500: {
+                                items: 3,
+                            },
+                            700: {
+                                items: 4,
+                            },
+                            800: {
+                                items: 5,
+                            }
+                        }
                     })
             });
 
+
+        $('.news-block .items')
+            .once(function () {
+                if (!is_mobile()) {
+                    return;
+                }
+
+                $(this)
+                    .addClass('owl-carousel')
+                    .owlCarousel({
+                        nav: false,
+                        dots: true,
+                        margin: 30,
+                        responsive: {
+                            0: {
+                                items: 1,
+                            },
+                            600: {
+                                items: 2,
+                            }
+                        }
+                    })
+            });
+
+
+        $('.gallery-block .items')
+            .once(function () {
+                if (!is_mobile()) {
+                    return;
+                }
+
+                $(this)
+                    .addClass('owl-carousel')
+                    .owlCarousel({
+                        nav: false,
+                        dots: true,
+                        margin: 8,
+                        responsive: {
+                            0: {
+                                items: 1,
+                            },
+                            400: {
+                                items: 2,
+                            },
+                            768: {
+                                items: 3,
+                            },
+                            1000: {
+                                items: 4,
+                            }
+                        }
+                    })
+            });
+
+
+        $('.header-block .menu li.has-dropdown > a')
+            .once()
+            .click(function (e) {
+                e.preventDefault();
+
+                let $this = $(this);
+                let li = $this.closest('li');
+
+                li.toggleClass('open');
+
+                $this
+                    .closest('.menu')
+                    .find('li')
+                    .not(li)
+                    .removeClass('open');
+            });
+
+
+        $('.sidebar-menu-block .block-title')
+            .once()
+            .click(function () {
+                $(this)
+                    .closest('.sidebar-menu-block')
+                    .toggleClass('open');
+            });
 
     }
 
@@ -328,6 +522,19 @@
 
         if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
             $(selectors).removeClass('menu-open');
+        }
+    });
+
+
+    $(document).click(function (event) {
+        let selectors = '.header-block .menu li.has-dropdown';
+
+        let $target = $(event.target);
+
+        if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
+            $(selectors)
+                .closest('li')
+                .removeClass('open');
         }
     });
 
