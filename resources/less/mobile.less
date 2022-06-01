@@ -375,8 +375,7 @@
     }
 
     .employees-list {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 40px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
 
         .item {
             .img {
@@ -398,6 +397,35 @@
 
                 .owl-next {
                     right: 0;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        .employees-list {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 480px) {
+        .employees-list {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+
+    @media (max-width: 768px) {
+        .tabs-block {
+            ul {
+                display: block;
+
+                li {
+                    margin-right: 0;
+
+                    a {
+                        text-align: center;
+                    }
                 }
             }
         }

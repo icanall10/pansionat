@@ -321,7 +321,7 @@
             });
 
 
-        $('.employees-list:not(.owl-carousel)')
+        $('.employees-block .employees-list:not(.owl-carousel)')
             .once('mobile-owl-carousel', function () {
                 if (!is_mobile()) return;
 
