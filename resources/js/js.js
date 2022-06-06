@@ -231,19 +231,20 @@
 
                 $.getScript('https://api-maps.yandex.ru/2.1.79?lang=ru_RU&apikey=4690a633-05cf-41e7-a869-27ee1e695319', function () {
                     ymaps.ready(function () {
-                        let coords = [
+                        let markers = $this.find('.marker');
+                        let placemark = null;
+
+                        let center = [
                             $this.data('latitude'),
                             $this.data('longitude')
                         ];
                         let hint = $this.data('hint') ? $this.data('hint') : '';
                         let zoom = $this.data('zoom') ? $this.data('zoom') : 14;
 
-                        console.log(coords);
-
                         let map = new ymaps.Map(
                             $this[0],
                             {
-                                center: coords,
+                                center: center,
                                 zoom: zoom
                             },
                             {
@@ -253,14 +254,41 @@
 
                         map.behaviors.disable('scrollZoom');
 
-                        let placemark = new ymaps.Placemark(coords, {
-                            iconCaption: hint
-                        }, {
-                            preset: 'islands#greenDotIconWithCaption',
-                            iconColor: '#87A756'
-                        });
+                        if (markers.length > 0) {
+                            markers.each(function () {
+                                let marker = $(this);
 
-                        map.geoObjects.add(placemark)
+                                placemark = new ymaps.Placemark(
+                                    [
+                                        marker.data('latitude'), marker.data('longitude')
+                                    ],
+                                    {
+                                        iconCaption: marker.data('hint') || ''
+                                    },
+                                    {
+                                        preset: 'islands#greenDotIconWithCaption',
+                                        iconColor: '#87A756'
+                                    }
+                                );
+
+                                markers.remove();
+
+                                map.geoObjects.add(placemark);
+                            });
+                        } else {
+                            placemark = new ymaps.Placemark(
+                                center,
+                                {
+                                    iconCaption: hint
+                                },
+                                {
+                                    preset: 'islands#greenDotIconWithCaption',
+                                    iconColor: '#87A756'
+                                }
+                            );
+
+                            map.geoObjects.add(placemark);
+                        }
                     });
                 });
             });
