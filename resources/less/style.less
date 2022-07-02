@@ -516,6 +516,12 @@ form {
                 text-decoration: none;
             }
         }
+
+        .social-and-menu {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
     }
 
     .footer {
@@ -612,6 +618,47 @@ form {
                         text-decoration: underline;
                     }
                 }
+            }
+        }
+    }
+
+    .social {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        a {
+            width: 36px;
+            height: 36px;
+            margin-right: 8px;
+            color: #000;
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: -1;
+                background: var(--color-main-light);
+                border-radius: 100px;
+                opacity: 0.1;
+            }
+
+            .i {
+                width: 20px;
+                height: 20px;
             }
         }
     }
