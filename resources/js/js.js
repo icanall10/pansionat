@@ -19,7 +19,7 @@
 
         async init() {
             this.setBackgroundPosition('right');
-            this.go('pay-error');
+            this.go('qr');
         }
 
 
