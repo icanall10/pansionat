@@ -3,8 +3,8 @@ html {
 
     body {
         background: #fff;
-        color: #443d39;
-        font-family: 'RF Dewi', Arial, sans-serif;
+        color: var(--color-main);
+        font-family: 'RF Dewi Extended', Arial, sans-serif;
         line-height: 1.4;
         margin: 0;
         padding: 0;
@@ -69,15 +69,80 @@ html {
         flex-direction: column;
         justify-content: flex-end;
 
+        position: relative;
+        z-index: 10;
+
         .title {
             line-height: 1.22;
             font-size: 84rem;
             font-weight: bold;
             font-family: 'RF Dewi Expanded', Arial, sans-serif;
+
+            margin-bottom: 60rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
 
-        position: relative;
-        z-index: 10;
+        [data-page="scanned"] {
+            .title {
+                font-size: 61rem;
+            }
+        }
+        [data-page="attach"] {
+            .title {
+                font-size: 66rem;
+            }
+        }
+        [data-page="pay-error"] {
+            .title {
+                font-size: 66rem;
+            }
+        }
+        [data-page="not-work"] {
+            .title {
+                position: relative;
+                top: 200rem;
+            }
+        }
+
+        .text {
+            font-size: 50rem;
+            font-weight: 600;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+        .price {
+            display: flex;
+
+            position: relative;
+            top: 340rem;
+
+            .value {
+                min-height: 96rem;
+                padding: 0 52rem;
+                font-family: 'RF Dewi Extended', Arial, sans-serif;
+                font-size: 50rem;
+                font-weight: bold;
+                border-radius: 100px;
+                background: #B8B699;
+                border: 2px solid #fff;
+                text-decoration: none;
+                color: #fff;
+                line-height: 1.1;
+                letter-spacing: 1rem;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+
+                transition: scale 900ms linear;
+            }
+        }
 
         [data-page] {
             position: absolute;
@@ -94,8 +159,6 @@ html {
         margin-left: -80rem;
         margin-right: -80rem;
 
-        overflow: hidden;
-
         position: absolute;
         z-index: 5;
         top: 21%;
@@ -109,6 +172,44 @@ html {
             left: 0;
 
             transform: scale(1.8);
+        }
+    }
+
+    #footer {
+        position: relative;
+
+        [data-page] {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .title {
+            font-size: 52rem;
+            font-weight: bold;
+            line-height: 1.25;
+            margin-bottom: 70rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+        .text {
+            font-size: 36rem;
+            font-style: italic;
+            margin-bottom: 60rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
         }
     }
 
@@ -130,6 +231,59 @@ html {
         &.animation-enabled {
             transition: all 900ms ease;
         }
+    }
+
+    [data-text-animate-fade] {
+        opacity: 0;
+
+        &.visible {
+            opacity: 1;
+        }
+
+        &.animation-enabled {
+            transition: all 900ms ease;
+        }
+    }
+
+    [data-text-animate-scale] {
+        transform: scale(0);
+
+        &.visible {
+            transform: scale(1);
+        }
+
+        &.animation-enabled {
+            transition: all 900ms ease;
+        }
+    }
+
+    .button {
+        min-height: 100rem;
+        padding: 0 52rem;
+        font-family: 'RF Dewi Extended', Arial, sans-serif;
+        font-size: 54rem;
+        font-weight: bold;
+        border-radius: 100px;
+        background: #fff;
+        text-decoration: none;
+        color: var(--color-main);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+
+        transition: color 200ms linear, background 200ms linear;
+
+        margin-bottom: 46rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .button:hover {
+        background: var(--color-main);
+        color: #fff;
     }
 }
 

@@ -19,7 +19,7 @@
 
         async init() {
             this.setBackgroundPosition('right');
-            this.go('scan');
+            this.go('pay-error');
         }
 
 
@@ -100,6 +100,44 @@
         }
 
 
+        textAnimateFade() {
+            this
+                .element
+                .find('[data-page]')
+                .not('[data-page="' + this.path + '"]')
+                .find('[data-text-animate-fade]')
+                .addClass('animation-enabled')
+                .removeClass('visible');
+
+            this
+                .element
+                .find('[data-page]')
+                .filter('[data-page="' + this.path + '"]')
+                .find('[data-text-animate-fade]')
+                .addClass('animation-enabled')
+                .addClass('visible');
+        }
+
+
+        textAnimateScale() {
+            this
+                .element
+                .find('[data-page]')
+                .not('[data-page="' + this.path + '"]')
+                .find('[data-text-animate-scale]')
+                .addClass('animation-enabled')
+                .removeClass('visible');
+
+            this
+                .element
+                .find('[data-page]')
+                .filter('[data-page="' + this.path + '"]')
+                .find('[data-text-animate-scale]')
+                .addClass('animation-enabled')
+                .addClass('visible');
+        }
+
+
         isPath(path) {
             return this.path === path;
         }
@@ -113,18 +151,17 @@
 
             $this.playOut();
 
-            if (isPathEmpty) {
+            $this.onPlayComplete = function () {
                 $this.path = path;
                 $this.toggleBackground();
                 $this.playIn();
                 $this.textAnimate();
-            } else {
-                $this.onPlayComplete = function(){
-                    $this.path = path;
-                    $this.toggleBackground();
-                    $this.playIn();
-                    $this.textAnimate();
-                };
+                $this.textAnimateFade();
+                $this.textAnimateScale();
+            };
+
+            if (isPathEmpty) {
+                $this.onPlayComplete();
             }
         }
 
@@ -217,6 +254,58 @@
                         $this.playSegment(0, 100);
                     };
                     break;
+
+                case 'attach':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-attach');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 30);
+
+                        $this.onPlayComplete = function () {
+                            $this.playSegment(30, 220, true);
+                        }
+                    };
+                    break;
+
+                case 'pay-error':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-pay-error');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 40);
+
+                        $this.onPlayComplete = function () {
+                            $this.playSegment(40, 220, true);
+                        }
+                    };
+                    break;
+
+                case 'pay-complete':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-pay-complete');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 64);
+
+                        $this.onPlayComplete = function () {
+                            $this.playSegment(64, 238, true);
+                        }
+                    };
+                    break;
+
+                case 'not-work':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-pay-not-work');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 40);
+                    };
+                    break;
             }
 
             if ($this.onPlayLoaded && $this.getLottiePlayer().loaded) {
@@ -244,6 +333,22 @@
 
                 case 'scanned':
                     $this.playSegment(730, 750);
+                    break;
+
+                case 'attach':
+                    $this.playSegment(722, 756);
+                    break;
+
+                case 'pay-error':
+                    $this.playSegment(344, 374);
+                    break;
+
+                case 'pay-complete':
+                    $this.playSegment(348, 370);
+                    break;
+
+                case 'not-work':
+                    $this.playSegment(725, 750);
                     break;
             }
         }
@@ -277,6 +382,7 @@
 
                 if (!loop && player.currentFrame >= to) {
                     clearInterval($this.frameInterval);
+
                     player.pause();
 
                     if ($this.onPlayComplete) {
@@ -292,11 +398,11 @@
     let page = new Page($('#page'));
 
 
-    $('#menu a')
+    $('[data-page-link]')
         .click(function (e) {
             e.preventDefault();
 
-            let path = $(this).attr('data-page');
+            let path = $(this).attr('data-page-link');
 
             page.go(path);
         });

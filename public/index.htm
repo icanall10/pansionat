@@ -11,9 +11,13 @@
 
 
         <ul id="menu">
-            <li><a href="#" data-page="qr">Главная</a></li>
-            <li><a href="#" data-page="scan">Отсканируйте карту лояльности</a></li>
-            <li><a href="#" data-page="scanned">Карта отсканирована</a></li>
+            <li><a href="#" data-page-link="qr">Главная</a></li>
+            <li><a href="#" data-page-link="scan">Отсканируйте карту лояльности</a></li>
+            <li><a href="#" data-page-link="scanned">Карта отсканирована</a></li>
+            <li><a href="#" data-page-link="attach">Приложите карту</a></li>
+            <li><a href="#" data-page-link="pay-error">Оплата не прошла</a></li>
+            <li><a href="#" data-page-link="pay-complete">Оплата выполнена</a></li>
+            <li><a href="#" data-page-link="not-work">Не работает</a></li>
         </ul>
 
 
@@ -37,12 +41,90 @@
                     <div class="title">
                         <div data-text-animate>Карта отсканирована</div>
                     </div>
+                    <div class="text">
+                        <div data-text-animate>Мы начислим бонусы за эту</div>
+                        <div data-text-animate>покупку на Ваш бонусный счет</div>
+                    </div>
+                </div>
+                <div data-page="attach">
+                    <div class="title">
+                        <div data-text-animate>Приложите карту</div>
+                        <div data-text-animate>или смартфон</div>
+                        <div data-text-animate>к терминалу</div>
+                    </div>
+                    <div class="price">
+                        <div class="value" data-text-animate-scale>350 ₽</div>
+                    </div>
+                </div>
+                <div data-page="pay-error">
+                    <div class="title">
+                        <div data-text-animate>Оплата не прошла</div>
+                    </div>
+                    <div class="text">
+                        <div data-text-animate>Попробуем еще раз?</div>
+                    </div>
+                </div>
+                <div data-page="pay-complete">
+                    <div class="title">
+                        <div data-text-animate>Спасибо за покупку</div>
+                    </div>
+                    <div class="text">
+                        <div data-text-animate>Пожалуйста, возьмите чек</div>
+                    </div>
+                </div>
+                <div data-page="not-work">
+                    <div class="title">
+                        <div data-text-animate>Извините,</div>
+                        <div data-text-animate>сейчас</div>
+                        <div data-text-animate>термина</div>
+                        <div data-text-animate>не работает</div>
+                    </div>
                 </div>
             </div>
 
             <div id="animation"></div>
 
-            <div id="footer"></div>
+            <div id="footer">
+                <div data-page="qr">
+                    <div class="title">
+                        <div data-text-animate-fade>Отсканируйте штрих-код,</div>
+                        <div data-text-animate-fade>чтобы начать</div>
+                    </div>
+                    <div class="text" data-text-animate-fade>
+                        <i>
+                            В терминале доступна только оплата картой,<br>
+                            для оплаты наличными обратитесь в кассу
+                        </i>
+                    </div>
+                </div>
+                <div data-page="scan">
+                    <div class="text" data-text-animate-fade>
+                        <i>
+                            Поднесите карту или телефон<br>
+                            с QR-кодом к сканнеру
+                        </i>
+                    </div>
+                    <div class="buttons" data-text-animate-fade>
+                        <a href="#" class="button">Пропустить</a>
+                    </div>
+                </div>
+                <div data-page="scanned">
+                    <div class="buttons" data-text-animate-fade>
+                        <a href="#" class="button">Продолжить</a>
+                    </div>
+                </div>
+                <div data-page="pay-error">
+                    <div class="buttons" data-text-animate-fade>
+                        <a href="#" class="button">Попробовать еще раз</a>
+                        <a href="#" class="button">Отменить покупку</a>
+                    </div>
+                </div>
+                <div data-page="pay-complete">
+                    <div class="buttons" data-text-animate-fade>
+                        <a href="#" class="button">Новая покупка</a>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <script src="./js/all.js"></script>
