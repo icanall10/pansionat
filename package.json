@@ -14,5 +14,8 @@
         "hot": "mix watch --hot",
         "prod": "npm run production",
         "production": "mix --production"
+    },
+    "dependencies": {
+        "lottie-web": "^5.9.6"
     }
 }

@@ -1,579 +1,304 @@
 (function ($) {
 
-    function behaviors() {
 
-        $('.slider-block .owl-carousel')
-            .once()
-            .owlCarousel({
-                items: 1,
-                dots: true,
-                margin: 30,
-                navText: [
-                    '<div class="i i-arrow"></div>',
-                    '<div class="i i-arrow"></div>'
-                ],
-                responsive: {
-                    0: {
-                        nav: false,
-                    },
-                    960: {
-                        nav: false,
-                    },
-                    1400: {
-                        nav: true,
+    class Page {
+        element;
+        backgroundPosition;
+        textAnimateInterval;
+        onPlayComplete;
+        onPlayLoaded;
+
+        lottiePlayers = {};
+        frameInterval;
+
+        constructor(element) {
+            this.element = element;
+
+            this.init();
+        }
+
+        async init() {
+            this.setBackgroundPosition('right');
+            this.go('scan');
+        }
+
+
+        isBackgroundPositionLeft() {
+            return this.backgroundPosition === 'left';
+        }
+
+        toggleBackground() {
+            this.isBackgroundPositionLeft() ? this.setBackgroundPosition('right') : this.setBackgroundPosition('left');
+        }
+
+        setBackgroundPosition(value) {
+            this.backgroundPosition = value;
+
+            this.element.attr('data-background-position', value);
+        }
+
+        getPageElements() {
+            return this
+                .element
+                .find('[data-page="' + this.path + '"]');
+        }
+
+
+        textAnimate() {
+            if (this.textAnimateInterval !== null) {
+                clearInterval(this.textAnimateInterval);
+            }
+
+            let $this = this;
+
+            $this.textAnimateItem();
+
+            this.textAnimateInterval = setInterval(function () {
+                $this.textAnimateItem();
+            }, 80);
+        }
+
+
+        textAnimateItem() {
+            let $this = this;
+
+            let items = $this
+                .element
+                .find('[data-page]')
+                .not('[data-page="' + $this.path + '"]')
+                .find('[data-text-animate]')
+                .filter('.visible');
+
+            if (items.length === 0) {
+                items = $this
+                    .element
+                    .find('[data-page="' + $this.path + '"]')
+                    .find('[data-text-animate]')
+                    .not('.visible');
+            }
+
+            if (items.length === 0) {
+                clearInterval($this.textAnimateInterval);
+                return;
+            }
+
+            let item = items.first();
+
+            item.addClass('animation-enabled');
+
+            if (item.hasClass('visible')) {
+                item.removeClass('visible');
+                item.addClass('hidden');
+
+                setTimeout(function () {
+                    item.removeClass('hidden');
+                }, 900);
+            } else {
+                item.removeClass('hidden');
+                item.addClass('visible');
+            }
+        }
+
+
+        isPath(path) {
+            return this.path === path;
+        }
+
+        go(path) {
+            let $this = this;
+
+            if ($this.isPath(path)) return;
+
+            let isPathEmpty = ($this.path == null);
+
+            $this.playOut();
+
+            if (isPathEmpty) {
+                $this.path = path;
+                $this.toggleBackground();
+                $this.playIn();
+                $this.textAnimate();
+            } else {
+                $this.onPlayComplete = function(){
+                    $this.path = path;
+                    $this.toggleBackground();
+                    $this.playIn();
+                    $this.textAnimate();
+                };
+            }
+        }
+
+
+        getLottiePlayer() {
+            let $this = this;
+
+            if ($this.path == null) return;
+
+            if ($this.path in $this.lottiePlayers) return $this.lottiePlayers[$this.path];
+
+            let animation = $this.element.find('#animation');
+
+            animation.prepend('<div class="player" data-page="' + $this.path + '"></div>');
+
+            let player = bodymovin.loadAnimation({
+                container: animation.find('.player').first()[0],
+                renderer: 'svg',
+                autoplay: false,
+                loop: false,
+                path: '/lottie/' + $this.path + '.json'
+            });
+
+            player.addEventListener('complete', function () {
+                console.log('--complete');
+
+                if ($this.onPlayComplete) {
+                    $this.onPlayComplete();
+                    $this.onPlayComplete = null;
+                }
+            });
+
+            player.addEventListener('DOMLoaded', function () {
+                if ($this.onPlayLoaded) {
+                    $this.onPlayLoaded();
+                    $this.onPlayLoaded = null;
+                }
+            });
+
+            player.loaded = false;
+
+            $this.lottiePlayers[$this.path] = player;
+
+            return player;
+        }
+
+
+        playIn() {
+            console.log('--playIn-' + this.path);
+
+            let $this = this;
+
+            if ($this.path == null) return;
+
+            switch ($this.path) {
+                case 'qr':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-qr');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 114);
+
+                        $this.onPlayComplete = function () {
+                            $this.playSegment(230, 342, true);
+                        }
+                    };
+                    break;
+
+                case 'scan':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-scan');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 100);
+
+                        $this.onPlayComplete = function () {
+                            $this.playSegment(100, 300, true);
+                        }
+                    };
+                    break;
+
+                case 'scanned':
+                    $this.onPlayLoaded = function () {
+                        console.log('--onPlayLoaded-scanned');
+
+                        $this.getLottiePlayer().loaded = true;
+
+                        $this.playSegment(0, 100);
+                    };
+                    break;
+            }
+
+            if ($this.onPlayLoaded && $this.getLottiePlayer().loaded) {
+                $this.onPlayLoaded();
+                $this.onPlayLoaded = null;
+            }
+        }
+
+
+        playOut() {
+            console.log('--playOut-' + this.path);
+
+            let $this = this;
+
+            if ($this.path == null) return;
+
+            switch ($this.path) {
+                case 'qr':
+                    $this.playSegment(700, 758);
+                    break;
+
+                case 'scan':
+                    $this.playSegment(700, 752);
+                    break;
+
+                case 'scanned':
+                    $this.playSegment(730, 750);
+                    break;
+            }
+        }
+
+
+        playSegment(from, to, loop) {
+            loop = loop || false;
+
+            let $this = this;
+
+            clearInterval($this.frameInterval);
+
+            let player = $this.getLottiePlayer();
+
+            player.pause();
+
+            player.goToAndPlay(from, true);
+
+            $this.frameInterval = setInterval(function () {
+                // console.log(player.currentFrame);
+
+                if (loop) {
+                    if (player.currentFrame < from) {
+                        player.setDirection(1);
+                    }
+
+                    if (player.currentFrame > to) {
+                        player.setDirection(-1);
                     }
                 }
-            });
 
+                if (!loop && player.currentFrame >= to) {
+                    clearInterval($this.frameInterval);
+                    player.pause();
 
-        $('.services-block .owl-carousel')
-            .once()
-            .owlCarousel({
-                margin: 30,
-                navText: [
-                    '<div class="i i-arrow-bold"></div>',
-                    '<div class="i i-arrow-bold"></div>'
-                ],
-                responsive: {
-                    0: {
-                        items: 1,
-                        dots: true,
-                        nav: false,
-                    },
-                    500: {
-                        items: 2,
-                        dots: true,
-                        nav: false,
-                    },
-                    768: {
-                        items: 3,
-                        dots: true,
-                        nav: false,
-                    },
-                    1280: {
-                        items: 4,
-                        dots: false,
-                        nav: true,
-                    },
-                    1366: {
-                        items: 5,
-                        dots: false,
-                        nav: true,
+                    if ($this.onPlayComplete) {
+                        $this.onPlayComplete();
+                        $this.onPlayComplete = null;
                     }
                 }
-            });
-
-
-        $('[data-contact-form-rules-confirm]')
-            .once()
-            .click(function (e) {
-                e.preventDefault();
-
-                $(this)
-                    .closest('[data-modal]')
-                    .dialog('close');
-
-                $('input[name="rules"]').prop('checked', true);
-            });
-
-
-        $('[data-contact-form-rules-cancel]')
-            .once()
-            .click(function (e) {
-                e.preventDefault();
-
-                $(this)
-                    .closest('[data-modal]')
-                    .dialog('close');
-
-                $('input[name="rules"]').prop('checked', false);
-            });
-
-
-        $('.tabs-block .toggle a')
-            .once()
-            .click(function (e) {
-                e.preventDefault();
-
-                $(this)
-                    .closest('ul')
-                    .toggleClass('open');
-            });
-
-
-        $('[data-selectbox]')
-            .once('selectbox')
-            .on('updateSelected', function () {
-                let $this = $(this);
-
-                let names = [];
-
-                $this.find('input[type="checkbox"]:checked + label').each(function () {
-                    names.push(
-                        $(this).text()
-                    );
-                });
-
-                $this
-                    .find('[data-selectbox-value]')
-                    .html(names.join(', ') || 'Все');
-            })
-            .on('updateValues', function () {
-                let $this = $(this);
-                let values = ($this.attr('data-values') || '').split(',');
-
-                values.forEach(function (value) {
-                    $this
-                        .find('input[type="checkbox"][value="' + value + '"]')
-                        .prop('checked', true);
-                });
-            })
-            .trigger('updateValues')
-            .trigger('updateSelected');
-
-
-        $('[data-selectbox] input[type="checkbox"]')
-            .once('selectbox-checkbox')
-            .change(function () {
-                $(this)
-                    .closest('[data-selectbox]')
-                    .trigger('updateSelected');
-            });
-
-
-        $('[data-selectbox-selected]')
-            .once('selectbox-selected')
-            .click(function (e) {
-                e.preventDefault();
-
-                $(this)
-                    .closest('[data-selectbox]')
-                    .toggleClass('open');
-            });
-
-
-        $('input[data-daterangepicker]')
-            .once()
-            .daterangepicker({
-                "autoApply": true,
-                "opens": "left",
-                "locale": {
-                    "format": "MM.DD.YYYY",
-                    "separator": " - ",
-                    "daysOfWeek": [
-                        "Вс",
-                        "Пн",
-                        "Вт",
-                        "Ср",
-                        "Чт",
-                        "Пт",
-                        "Сб"
-                    ],
-                    "monthNames": [
-                        "Январь",
-                        "Февраль",
-                        "Март",
-                        "Апрель",
-                        "Май",
-                        "Июнь",
-                        "Июль",
-                        "Август",
-                        "Сентябрь",
-                        "Октябрь",
-                        "Ноябрь",
-                        "Декабрь"
-                    ],
-                    "firstDay": 1
-                },
-                "startDate": new Date(),
-                "endDate": new Date().addDays(7)
-            });
-
-
-        $('.schedule-list .owl-carousel')
-            .once(function () {
-                let $this = $(this);
-                let date = formatDate(new Date());
-                let index = $this.find('.item[data-date="' + date + '"]').index() || 0;
-
-                $this.owlCarousel({
-                    dots: false,
-                    nav: true,
-                    margin: 1,
-                    responsive: {
-                        0: {
-                            items: 2,
-                            startPosition: index
-                        },
-                        500: {
-                            items: 3,
-                            startPosition: index
-                        },
-                        700: {
-                            items: 4,
-                            startPosition: index
-                        },
-                        900: {
-                            items: 5,
-                            startPosition: index
-                        },
-                        1200: {
-                            items: 7,
-                        }
-                    }
-                });
-            });
-
-
-        $('[data-map]')
-            .once(function () {
-                let $this = $(this);
-
-                $.getScript('https://api-maps.yandex.ru/2.1.79?lang=ru_RU&apikey=4690a633-05cf-41e7-a869-27ee1e695319', function () {
-                    ymaps.ready(function () {
-                        let markers = $this.find('.marker');
-                        let placemark = null;
-
-                        let center = [
-                            $this.data('latitude'),
-                            $this.data('longitude')
-                        ];
-                        let hint = $this.data('hint') ? $this.data('hint') : '';
-                        let zoom = $this.data('zoom') ? $this.data('zoom') : 14;
-
-                        let map = new ymaps.Map(
-                            $this[0],
-                            {
-                                center: center,
-                                zoom: zoom
-                            },
-                            {
-                                suppressMapOpenBlock: true
-                            }
-                        );
-
-                        map.behaviors.disable('scrollZoom');
-
-                        if (markers.length > 0) {
-                            markers.each(function () {
-                                let marker = $(this);
-
-                                placemark = new ymaps.Placemark(
-                                    [
-                                        marker.data('latitude'), marker.data('longitude')
-                                    ],
-                                    {
-                                        iconCaption: marker.data('hint') || ''
-                                    },
-                                    {
-                                        preset: 'islands#greenDotIconWithCaption',
-                                        iconColor: '#87A756'
-                                    }
-                                );
-
-                                markers.remove();
-
-                                map.geoObjects.add(placemark);
-                            });
-                        } else {
-                            placemark = new ymaps.Placemark(
-                                center,
-                                {
-                                    iconCaption: hint
-                                },
-                                {
-                                    preset: 'islands#greenDotIconWithCaption',
-                                    iconColor: '#87A756'
-                                }
-                            );
-
-                            map.geoObjects.add(placemark);
-                        }
-                    });
-                });
-            });
-
-
-        $('.slider-block-2 .owl-carousel')
-            .once()
-            .owlCarousel({
-                items: 1,
-                responsive: {
-                    0: {
-                        nav: false,
-                        dots: true,
-                    },
-                    960: {
-                        nav: false,
-                        dots: true,
-                    },
-                    1400: {
-                        nav: true,
-                        dots: false,
-                    }
-                }
-            });
-
-
-        $('.employees-list.owl-carousel')
-            .once()
-            .owlCarousel({
-                margin: 30,
-                navText: [
-                    '<div class="i i-arrow-bold"></div>',
-                    '<div class="i i-arrow-bold"></div>'
-                ],
-                responsive: {
-                    0: {
-                        items: 1,
-                        nav: false,
-                        dots: true,
-                    },
-                    481: {
-                        items: 2,
-                        nav: false,
-                        dots: true,
-
-                    },
-                    768: {
-                        items: 3,
-                        nav: false,
-                        dots: true,
-                    },
-                    1000: {
-                        items: 4,
-                        nav: true,
-                        dots: false,
-                    }
-                }
-            });
-
-
-        $('.employees-block .employees-list:not(.owl-carousel)')
-            .once('mobile-owl-carousel', function () {
-                if (!is_mobile()) return;
-
-                $(this)
-                    .addClass('owl-carousel')
-                    .owlCarousel({
-                        margin: 30,
-                        navText: [
-                            '<div class="i i-arrow-bold"></div>',
-                            '<div class="i i-arrow-bold"></div>'
-                        ],
-                        responsive: {
-                            0: {
-                                items: 1,
-                                nav: false,
-                                dots: true,
-                            },
-                            481: {
-                                items: 2,
-                                nav: false,
-                                dots: true,
-
-                            },
-                            768: {
-                                items: 3,
-                                nav: false,
-                                dots: true,
-                            },
-                            1000: {
-                                items: 4,
-                                nav: true,
-                                dots: false,
-                            }
-                        }
-                    });
-            });
-
-
-        $('.menu-link')
-            .once()
-            .click(function (e) {
-                e.preventDefault();
-
-                $(this)
-                    .closest('.header-block')
-                    .toggleClass('menu-open');
-            });
-
-
-        $('.links-block .items')
-            .once(function () {
-                if (!is_mobile()) {
-                    return;
-                }
-
-                $(this)
-                    .addClass('owl-carousel')
-                    .owlCarousel({
-                        nav: false,
-                        dots: true,
-                        margin: 20,
-                        responsive: {
-                            0: {
-                                items: 2,
-                            },
-                            500: {
-                                items: 3,
-                            },
-                            700: {
-                                items: 4,
-                            },
-                            800: {
-                                items: 5,
-                            }
-                        }
-                    })
-            });
-
-
-        $('.news-block .items')
-            .once(function () {
-                if (!is_mobile()) {
-                    return;
-                }
-
-                $(this)
-                    .addClass('owl-carousel')
-                    .owlCarousel({
-                        nav: false,
-                        dots: true,
-                        margin: 30,
-                        responsive: {
-                            0: {
-                                items: 1,
-                            },
-                            600: {
-                                items: 2,
-                            }
-                        }
-                    })
-            });
-
-
-        $('.gallery-block .items')
-            .once(function () {
-                if (!is_mobile()) {
-                    return;
-                }
-
-                $(this)
-                    .addClass('owl-carousel')
-                    .owlCarousel({
-                        nav: false,
-                        dots: true,
-                        margin: 8,
-                        responsive: {
-                            0: {
-                                items: 1,
-                            },
-                            400: {
-                                items: 2,
-                            },
-                            768: {
-                                items: 3,
-                            },
-                            1000: {
-                                items: 4,
-                            }
-                        }
-                    })
-            });
-
-
-        $('.header-block .menu li.has-dropdown > a')
-            .once()
-            .click(function (e) {
-                e.preventDefault();
-
-                let $this = $(this);
-                let li = $this.closest('li');
-
-                li.toggleClass('open');
-
-                $this
-                    .closest('.menu')
-                    .find('li')
-                    .not(li)
-                    .removeClass('open');
-            });
-
-
-        $('.sidebar-menu-block .block-title')
-            .once()
-            .click(function () {
-                $(this)
-                    .closest('.sidebar-menu-block')
-                    .toggleClass('open');
-            });
-
-    }
-
-    Date.prototype.addDays = function (dias) {
-        let date = new Date(this.valueOf());
-
-        date.setDate(parseInt(date.getDate()) + parseInt(dias));
-
-        return date;
-    };
-
-    function padTo2Digits(num) {
-        return num.toString().padStart(2, '0');
-    }
-
-    function formatDate(date) {
-        return [
-            padTo2Digits(date.getDate()),
-            padTo2Digits(date.getMonth() + 1),
-            date.getFullYear(),
-        ].join('.');
+            }, 1000 / 30);
+        }
     }
 
 
-    $(document).click(function (event) {
-        let selectors = '[data-selectbox]';
-
-        let $target = $(event.target);
-
-        if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
-            $(selectors).removeClass('open');
-        }
-    });
+    let page = new Page($('#page'));
 
 
-    $(document).click(function (event) {
-        let selectors = '.header-block';
+    $('#menu a')
+        .click(function (e) {
+            e.preventDefault();
 
-        let $target = $(event.target);
+            let path = $(this).attr('data-page');
 
-        if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
-            $(selectors).removeClass('menu-open');
-        }
-    });
-
-
-    $(document).click(function (event) {
-        let selectors = '.header-block .menu li.has-dropdown';
-
-        let $target = $(event.target);
-
-        if (!$target.closest(selectors).length && $(selectors).is(":visible")) {
-            $(selectors)
-                .closest('li')
-                .removeClass('open');
-        }
-    });
-
-
-    $(document).ready(function () {
-        behaviors();
-    });
-
-
-    $(document).ajaxComplete(function () {
-        behaviors();
-    });
+            page.go(path);
+        });
 
 })(jQuery);

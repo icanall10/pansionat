@@ -1,11 +1,14 @@
 {
-    "/resources/css/tablet.css": "/resources/css/tablet.css",
     "/resources/css/style.css": "/resources/css/style.css",
     "/resources/css/icons.css": "/resources/css/icons.css",
     "/resources/css/fonts.css": "/resources/css/fonts.css",
     "/resources/css/variables.css": "/resources/css/variables.css",
     "/resources/css/reset.css": "/resources/css/reset.css",
-    "/resources/css/mobile.css": "/resources/css/mobile.css",
+    "/public/img/bg1.jpg": "/public/img/bg1.jpg",
+    "/public/img/bg2.jpg": "/public/img/bg2.jpg",
+    "/public/lottie/qr.json": "/public/lottie/qr.json",
+    "/public/lottie/scan.json": "/public/lottie/scan.json",
+    "/public/lottie/scanned.json": "/public/lottie/scanned.json",
     "/public/css/all.css": "/public/css/all.css",
     "/public/js/all.js": "/public/js/all.js"
 }
