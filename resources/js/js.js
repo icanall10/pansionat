@@ -182,7 +182,7 @@
                 renderer: 'svg',
                 autoplay: false,
                 loop: false,
-                path: '/lottie/' + $this.path + '.json'
+                path: '/lottie/' + $this.path + '.json?v2'
             });
 
             player.addEventListener('complete', function () {
